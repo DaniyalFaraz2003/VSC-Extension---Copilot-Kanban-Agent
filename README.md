@@ -1,6 +1,6 @@
 # Copilot Kanban
 
-Visual Kanban board that integrates with VS Code Copilot Chat - shows task execution in real-time.
+A VS Code extension which allows a visual kanban board to be integrated with the github copilot agent chat. This allows for real time task creation by the agent, updation and completion all while you observing what the agent is doing.
 
 ## How It Works
 
