@@ -1,0 +1,163 @@
+{
+  "name": "copilot-kanban",
+  "displayName": "Copilot Kanban",
+  "description": "Visual Kanban board for Copilot Chat - shows task execution in real-time",
+  "version": "0.0.1",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.107.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copilot-kanban.showBoard",
+        "title": "Show Agent Kanban Board",
+        "category": "Copilot Kanban"
+      },
+      {
+        "command": "copilot-kanban.createTasks",
+        "title": "Create Tasks",
+        "category": "Copilot Kanban"
+      },
+      {
+        "command": "copilot-kanban.setTaskStatus",
+        "title": "Set Task Status",
+        "category": "Copilot Kanban"
+      },
+      {
+        "command": "copilot-kanban.resetBoard",
+        "title": "Reset Agent Kanban Board",
+        "category": "Copilot Kanban"
+      },
+      {
+        "command": "copilot-kanban.getTasks",
+        "title": "Get Tasks",
+        "category": "Copilot Kanban"
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "copilot-kanban_create_tasks",
+        "displayName": "Create Kanban Tasks",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "kanban_create",
+        "icon": "$(checklist)",
+        "userDescription": "Creates tasks on the Kanban board to track work progress",
+        "modelDescription": "Creates multiple tasks on the Kanban board. Use this tool when you need to break down a user's request into actionable tasks. Each task will appear on the board with a title and execution order. All tasks start in 'ready' status. This tool should be called at the beginning of work to establish a task plan.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "description": "Array of tasks to create",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Clear, concise description of what this task does (e.g., 'Set up database schema', 'Create API endpoints')"
+                  },
+                  "order": {
+                    "type": "number",
+                    "description": "Execution order starting from 1. Lower numbers execute first."
+                  }
+                },
+                "required": [
+                  "title",
+                  "order"
+                ]
+              }
+            }
+          },
+          "required": [
+            "tasks"
+          ]
+        }
+      },
+      {
+        "name": "copilot-kanban_update_task",
+        "displayName": "Update Task Status",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "kanban_update",
+        "icon": "$(arrow-right)",
+        "userDescription": "Updates the status of a task on the Kanban board",
+        "modelDescription": "Updates the status of a specific task on the Kanban board. Use this to move tasks between columns as you progress through work. Status values: 'ready' (waiting to start), 'in_progress' (currently working on it), 'in_review' (validating), 'done' (completed). IMPORTANT: Only ONE task can be 'in_progress' at a time. Call get_tasks first to get task IDs.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "taskId": {
+              "type": "string",
+              "description": "The unique ID of the task to update. Get this from the get_tasks tool."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "in_progress",
+                "in_review",
+                "done"
+              ],
+              "description": "The new status. Only one task can be 'in_progress' at a time."
+            }
+          },
+          "required": [
+            "taskId",
+            "status"
+          ]
+        }
+      },
+      {
+        "name": "copilot-kanban_get_tasks",
+        "displayName": "Get Kanban Tasks",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "kanban_get",
+        "icon": "$(list-unordered)",
+        "userDescription": "Retrieves all tasks from the Kanban board",
+        "modelDescription": "Retrieves all current tasks from the Kanban board with their IDs, titles, status, and order. Use this to check what tasks exist, find task IDs for updating status, or see what's currently in progress. Call this before update_task to get the correct task ID.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "copilot-kanban_reset_board",
+        "displayName": "Reset Kanban Board",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "kanban_reset",
+        "icon": "$(trash)",
+        "userDescription": "Clears all tasks from the Kanban board",
+        "modelDescription": "Clears all tasks from the Kanban board. Use this at the start of a new user request to clear old tasks and start fresh. This ensures the board only shows tasks relevant to the current work.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.107.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.48.1",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
