@@ -48,7 +48,7 @@ Then use Command Palette: `Copilot Kanban: Show Agent Kanban Board`
 
 ## What You'll See
 
-✅ Board opens as an **editor tab** (not in sidebar)  
+✅ Board opens as an **editor tab** 
 ✅ Tasks appear in 4 columns: Ready → In Progress → In Review → Done  
 ✅ Only one task can be "In Progress" at a time  
 ✅ Tasks persist in `.vscode/kanban-agent.json`  
