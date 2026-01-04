@@ -3,7 +3,7 @@
   "displayName": "Copilot Kanban",
   "description": "Visual Kanban board for Copilot Chat - shows task execution in real-time",
   "version": "0.0.1",
-  "publisher": "Daniyal Faraz",
+  "publisher": "DaniyalFaraz",
   "icon": "./logo.png",
   "galleryBanner": {
     "color": "#3c3c3c",
