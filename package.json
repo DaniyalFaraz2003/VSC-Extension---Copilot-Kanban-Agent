@@ -3,7 +3,17 @@
   "displayName": "Copilot Kanban",
   "description": "Visual Kanban board for Copilot Chat - shows task execution in real-time",
   "version": "0.0.1",
-  "publisher": "your-publisher-name",
+  "publisher": "Daniyal Faraz",
+  "icon": "./logo.png",
+  "galleryBanner": {
+    "color": "#3c3c3c",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DaniyalFaraz2003/VSC-Extension---Copilot-Kanban-Agent"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.107.0"
   },
