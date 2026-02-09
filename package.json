@@ -31,26 +31,6 @@
         "command": "copilot-kanban.showBoard",
         "title": "Show Agent Kanban Board",
         "category": "Copilot Kanban"
-      },
-      {
-        "command": "copilot-kanban.createTasks",
-        "title": "Create Tasks",
-        "category": "Copilot Kanban"
-      },
-      {
-        "command": "copilot-kanban.setTaskStatus",
-        "title": "Set Task Status",
-        "category": "Copilot Kanban"
-      },
-      {
-        "command": "copilot-kanban.resetBoard",
-        "title": "Reset Agent Kanban Board",
-        "category": "Copilot Kanban"
-      },
-      {
-        "command": "copilot-kanban.getTasks",
-        "title": "Get Tasks",
-        "category": "Copilot Kanban"
       }
     ],
     "languageModelTools": [
