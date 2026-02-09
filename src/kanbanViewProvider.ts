@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { TaskStateManager } from './taskStateManager';
-import { Task } from './types';
+import { Task, TaskStatus, WebViewMessage } from './types';
 
 /**
  * KanbanViewProvider - Manages the WebView Panel that displays the Kanban board
@@ -61,6 +61,9 @@ export class KanbanViewProvider {
                 case 'ready':
                     this.updateWebView();
                     break;
+                case 'moveTask':
+                    this.taskManager.moveTask(message.taskId, message.newStatus);
+                    break;
             }
         });
 
@@ -88,7 +91,12 @@ export class KanbanViewProvider {
     /**
      * Generate the complete HTML for the Kanban board UI
      */
-    private getHtmlContent(webview: vscode.Webview): string {
+    private getHtmlContent(webview: vscode.Webview):
+     string {
+        // Use nonce for security
+        const nonce = getNonce();
+        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'out', 'kanbanBoard.js'));
+
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,6 +158,12 @@ export class KanbanViewProvider {
             flex-direction: column;
             gap: 8px;
             min-height: 100px;
+            padding: 4px; /* Add padding for drag feedback */
+            transition: background-color 0.2s ease;
+        }
+
+        .task-list.drag-over {
+            background-color: rgba(128, 128, 128, 0.1); /* Highlight when dragging over */
         }
 
         .task {
@@ -159,11 +173,17 @@ export class KanbanViewProvider {
             padding: 12px;
             transition: all 0.2s ease;
             position: relative;
+            cursor: grab; /* Indicate draggable */
         }
 
         .task:hover {
             border-color: var(--vscode-focusBorder);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .task.dragging {
+            opacity: 0.5;
+            border-style: dashed;
         }
 
         .task-title {
@@ -289,15 +309,21 @@ export class KanbanViewProvider {
         </div>
     </div>
 
-    <script>
-        (function() {
-            const vscode = acquireVsCodeApi();
-            
-            // Notify extension that WebView is ready
-            vscode.postMessage({ type: 'ready' });
+    <script nonce="${nonce}" src="${scriptUri}"></script>
+</body>
+</html>
+`;
+    }
+}
 
-            // Listen for task updates from extension
-            window.addEventListener('message', event => {
+function getNonce() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 32; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
                 const message = event.data;
                 
                 if (message.type === 'update' || message.type === 'init') {
